@@ -1,11 +1,14 @@
 const express = require("express");
 const Student = require('./models/Student')
-// const express = require("express");
+const cors = require('cors');
 
 const { connectToDB, getDb } = require("./db");
 
 //  * Initialize the app
 const app = express();
+// * Enable CORS
+app.use(cors())
+
 
 //  * Set up middle ware
 
@@ -72,11 +75,11 @@ app.get("/api/students/:id", (req, res) => {
 		//  * Show error
 		res.status(400).json({ Error: "Student ID must be a number" });
 	}
-});
+})
 
 // * Creating an student:
 
-app.post("/api/students", (req, res) => {
+app.post("/api/students", async (req, res) => {
 	const student = req.body;
 
     const newStudent = new Student({
@@ -85,7 +88,8 @@ app.post("/api/students", (req, res) => {
         last_name: student.last_name,
         email: student.email,
         gender: student.gender,
-        dob: student.dob
+        dob: student.dob,
+        password: student.password
     });
 
 	newStudent.save()
